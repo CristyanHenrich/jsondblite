@@ -1,5 +1,5 @@
 {
-  "name": "jsondblite",
+  "name": "ligthjsondb",
   "version": "1.0.0",
   "description": "This is a package that adds a simple local json based database to your project.",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CristyanHenrich/jsondblite.git"
+    "url": "git+https://github.com/CristyanHenrich/ligthjsondb.git"
   },
   "keywords": [
     "bd",
@@ -17,7 +17,7 @@
   "author": "Cristyan Henrich",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CristyanHenrich/jsondblite/issues"
+    "url": "https://github.com/CristyanHenrich/ligthjsondb/issues"
   },
-  "homepage": "https://github.com/CristyanHenrich/jsondblite#readme"
+  "homepage": "https://github.com/CristyanHenrich/ligthjsondb#readme"
 }

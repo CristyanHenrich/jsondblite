@@ -1,5 +1,5 @@
-const JsonDBLite = require('.');
-const db = new JsonDBLite();
+const LigthJsonDB = require('.');
+const db = new LigthJsonDB();
 
 async function main() {
     await db.init(['clients']);

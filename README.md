@@ -1,6 +1,6 @@
-# JsonDBLite
+# LigthJsonDB
 
-JsonDBLite é um pacote Node.js para a criação de um banco de dados local baseado em JSON. Ele permite realizar operações básicas de CRUD (Create, Read, Update, Delete) em um formato de banco de dados simples e eficiente, ideal para pequenos projetos ou aplicações que necessitam de uma solução de armazenamento de dados rápida e sem a necessidade de um banco de dados completo.
+LigthJsonDB é um pacote Node.js para a criação de um banco de dados local baseado em JSON. Ele permite realizar operações básicas de CRUD (Create, Read, Update, Delete) em um formato de banco de dados simples e eficiente, ideal para pequenos projetos ou aplicações que necessitam de uma solução de armazenamento de dados rápida e sem a necessidade de um banco de dados completo.
 
 ## Recursos
 
@@ -11,23 +11,23 @@ JsonDBLite é um pacote Node.js para a criação de um banco de dados local base
 ## Instalação
 
 ```bash
-npm install jsondblite
+npm install ligthjsondb
 ```
 
 ## Uso Básico
 
-Após a instalação, você pode usar o JsonDBLite da seguinte maneira:
+Após a instalação, você pode usar o LigthJsonDB da seguinte maneira:
 
 ### Importando o Pacote
 
 ```javascript
-const JsonDBLite = require('jsondblite');
+const LigthJsonDB = require('ligthjsondb');
 ```
 
 ### Inicializando o Banco de Dados
 
 ```javascript
-const db = new JsonDBLite();
+const db = new LigthJsonDB();
 db.init(['clients']);
 ```
 
@@ -61,11 +61,11 @@ await db.remove('clients', clientId);
 
 ## Exemplo de Uso Completo
 
-Veja abaixo um exemplo completo de como usar o JsonDBLite, de uma outra maneira:
+Veja abaixo um exemplo completo de como usar o LigthJsonDB, de uma outra maneira:
 
 ```javascript
-const JsonDBLite = require('jsondblite');
-const db = new JsonDBLite();
+const LigthJsonDB = require('ligthjsondb');
+const db = new LigthJsonDB();
 
 async function main() {
     await db.init(['clients']);
@@ -106,4 +106,4 @@ Contribuições para o projeto são bem-vindas. Para contribuir, por favor, crie
 ## Importante
 
 ```
-Esse README oferece uma visão geral do seu projeto, incluindo como instalar, usar e contribuir para ele. Certifique-se de substituir `jsondblite` pelo nome real do seu pacote no npm, caso seja diferente.
+Esse README oferece uma visão geral do seu projeto, incluindo como instalar, usar e contribuir para ele. Certifique-se de substituir `ligthjsondb` pelo nome real do seu pacote no npm, caso seja diferente.

@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 
-class JsonDBLite {
+class LigthJsonDB {
     constructor() {
         this.databasePath = path.join(__dirname, 'database');
     }
@@ -71,4 +71,4 @@ class JsonDBLite {
     }
 }
 
-module.exports = JsonDBLite;
+module.exports = LigthJsonDB;
