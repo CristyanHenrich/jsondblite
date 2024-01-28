@@ -1,4 +1,5 @@
 const LigthJsonDB = require('.');
+
 const db = new LigthJsonDB();
 
 async function main() {

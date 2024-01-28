@@ -26,10 +26,17 @@ const LigthJsonDB = require('ligthjsondb');
 
 ### Inicializando o Banco de Dados
 
+Voce pode determinar um caminho personalizado para a pasta database da seguinte forma:
+
 ```javascript
-const db = new LigthJsonDB();
+const db = new LigthJsonDB({
+    databasePath: 'caminho/personalizado/para/o/database'
+});
+
 db.init(['clients']);
 ```
+
+Caso nao seja definido o caminho para a pasta database, a mesma sera criada na raiz do projeto.
 
 ### Adicionando Dados
 
@@ -65,6 +72,7 @@ Veja abaixo um exemplo completo de como usar o LigthJsonDB, de uma outra maneira
 
 ```javascript
 const LigthJsonDB = require('ligthjsondb');
+
 const db = new LigthJsonDB();
 
 async function main() {

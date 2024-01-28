@@ -1,13 +1,14 @@
-const fs = require('fs/promises');
+const fsp = require('fs').promises;
 const path = require('path');
-
 class LigthJsonDB {
-    constructor() {
-        this.databasePath = path.join(__dirname, 'database');
+    constructor(config = {}) {
+        this.databasePath = config.databasePath 
+                            ? path.join(process.cwd(), config.databasePath, 'database')
+                            : path.join('database');
     }
 
     async init(tables = []) {
-        await fs.mkdir(this.databasePath, { recursive: true });
+        await fsp.mkdir(this.databasePath, { recursive: true });
         for (const table of tables) {
             await this.createTableIfNotExists(table);
         }
@@ -16,9 +17,9 @@ class LigthJsonDB {
     async createTableIfNotExists(table) {
         const filePath = this.getFilePath(table);
         try {
-            await fs.access(filePath);
+            await fsp.access(filePath);
         } catch (err) {
-            await fs.writeFile(filePath, JSON.stringify([]));
+            await fsp.writeFile(filePath, JSON.stringify([]));
         }
     }
 
@@ -56,14 +57,14 @@ class LigthJsonDB {
 
     async readData(table) {
         const filePath = this.getFilePath(table);
-        const json = await fs.readFile(filePath, 'utf8');
+        const json = await fsp.readFile(filePath, 'utf8');
         return JSON.parse(json);
     }
 
     async writeData(table, data) {
         const filePath = this.getFilePath(table);
         const json = JSON.stringify(data, null, 4);
-        await fs.writeFile(filePath, json, 'utf8');
+        await fsp.writeFile(filePath, json, 'utf8');
     }
 
     getFilePath(table) {
