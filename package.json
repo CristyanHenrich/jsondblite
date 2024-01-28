@@ -1,6 +1,6 @@
 {
   "name": "ligthjsondb",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a package that adds a simple local json based database to your project.",
   "main": "index.js",
   "scripts": {
