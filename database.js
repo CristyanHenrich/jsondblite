@@ -1,128 +1,72 @@
-const fs = require('fs');
+const fs = require('fs/promises');
+const path = require('path');
 
-function createTableIfNotExists(table) {
-    let filePath = `database/${table}.json`;
-    if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, JSON.stringify([]));
-        console.log(`${filePath} criado com sucesso!`);
-    }
-}
-
-function list(table, id) {
-    let filePath = `database/${table}.json`;
-
-    if (!fs.existsSync(filePath)) {
-        createTableIfNotExists(table);
+class SimpleJsonDB {
+    constructor() {
+        this.databasePath = path.join(__dirname, 'database');
     }
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erro ao ler o arquivo:', err);
-            return;
+    async init(tables = []) {
+        await fs.mkdir(this.databasePath, { recursive: true });
+        for (const table of tables) {
+            await this.createTableIfNotExists(table);
         }
-
-        const table_rows = JSON.parse(data);
-
-        if (id) {
-            const table_row = table_rows.find(row => row.id === id);
-            console.log(table_row);
-            return;
-        }
-
-        console.log(JSON.parse(data));
-    });
-}
-
-function add(table, newData) {
-    let filePath = `database/${table}.json`;
-
-    if (!fs.existsSync(filePath)) {
-        createTableIfNotExists(table);
     }
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erro ao ler o arquivo:', err);
+    async createTableIfNotExists(table) {
+        const filePath = this.getFilePath(table);
+        try {
+            await fs.access(filePath);
+        } catch (err) {
+            await fs.writeFile(filePath, JSON.stringify([]));
         }
+    }
 
-        const table_rows = JSON.parse(data);
-        const maxId = table_rows.reduce((max, table_row) => table_row.id > max ? table_row.id : max, 0);
+    async list(table) {
+        const data = await this.readData(table);
+        return data;
+    }
+
+    async add(table, newData) {
+        const data = await this.readData(table);
+        const maxId = data.reduce((max, item) => item.id > max ? item.id : max, 0);
         const newRow = { id: maxId + 1, ...newData };
-        
-        table_rows.push(newRow);
-        
-        fs.writeFile(filePath, JSON.stringify(table_rows, null, 4), (err) => {
-            if (err) {
-                console.error('Erro ao escrever no arquivo:', err);
-                return;
-            }
-            console.log(`Dado adicionado com sucesso a tabela - ${table} :`, newRow);
-        });
-    });
-}
-
-function update(table, id, newData) {
-    let filePath = `database/${table}.json`;
-
-    if (!fs.existsSync(filePath)) {
-        createTableIfNotExists(table);
+        data.push(newRow);
+        await this.writeData(table, data);
+        return newRow;
     }
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erro ao ler o arquivo:', err);
+    async update(table, id, newData) {
+        const data = await this.readData(table);
+        const index = data.findIndex(item => item.id === id);
+        if (index === -1) {
+            throw new Error(`Registro com ID ${id} não encontrado.`);
         }
-
-        let table_rows = JSON.parse(data);
-        const dataIndex = table_rows.findIndex(row => row.id === id);
-
-        if (dataIndex === -1) {
-            console.log(`${table} com id ${id} nao encontrado.`);
-            return;
-        }
-
-        table_rows[dataIndex] = { ...table_rows[dataIndex], ...newData };
-        
-        fs.writeFile(filePath, JSON.stringify(table_rows, null, 4), err => {
-            if (err) {
-                console.error('Erro ao escrever no arquivo:', err);
-                return;
-            }
-            console.log(`Dado atualizado com sucesso a tabela - ${table} :`, table_rows[dataIndex]);
-        });
-    });
-}
-
-function remove(table, id) {
-    let filePath = `database/${table}.json`;
-
-    if (!fs.existsSync(filePath)) {
-        createTableIfNotExists(table);
+        data[index] = { ...data[index], ...newData };
+        await this.writeData(table, data);
     }
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erro ao ler o arquivo:', err);
-        }
+    async remove(table, id) {
+        let data = await this.readData(table);
+        data = data.filter(item => item.id !== id);
+        await this.writeData(table, data);
+    }
 
-        let table_rows = JSON.parse(data);
-        const dataIndex = table_rows.findIndex(row => row.id === id);
+    async readData(table) {
+        const filePath = this.getFilePath(table);
+        const json = await fs.readFile(filePath, 'utf8');
+        return JSON.parse(json);
+    }
 
-        if (dataIndex === -1) {
-            console.log(`${table} com id ${id} nao encontrado.`);
-            return;
-        }
+    async writeData(table, data) {
+        const filePath = this.getFilePath(table);
+        const json = JSON.stringify(data, null, 4);
+        await fs.writeFile(filePath, json, 'utf8');
+    }
 
-        table_rows.splice(dataIndex, 1);
-        
-        fs.writeFile(filePath, JSON.stringify(table_rows, null, 4), err => {
-            if (err) {
-                console.error('Erro ao escrever no arquivo:', err);
-                return;
-            }
-            console.log(`Dado removido com sucesso a tabela - ${table}!`);
-        });
-    });
+    getFilePath(table) {
+        return path.join(this.databasePath, `${table}.json`);
+    }
 }
 
-module.exports = { createTableIfNotExists, add, list, update, remove };
+module.exports = SimpleJsonDB;

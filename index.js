@@ -1,24 +1,28 @@
-const db = require('./database');
+const SimpleJsonDB = require('./database');
+const db = new SimpleJsonDB();
 
-// Exemplo de uso:
-/*
-db.createTableIfNotExists('clients');
+//Exemplos de uso
+async function main() {
+    // Inicializando o banco de dados
+    await db.init(['clients']);
 
-db.add('clients', {
-    clienUrl: 'syerprograms.com.br',
-    platform: 'hostoo',
-    login: 'cristyanhenrich16@gmail.com',
-    password: 'teste.',
-    session_token: null,
-});
+    // Adicionando um novo cliente
+    const newClient = await db.add('clients', { nome: 'Cristyan', email: 'email@example.com' });
+    console.log('Cliente adicionado:', newClient);
 
+    // Listando todos os clientes
+    const clients = await db.list('clients');
+    console.log('Todos os clientes:', clients);
 
-db.update('clients', 1, {
-    login: 'novoemail@example.com',
-    password: 'novaSenha123'
-});
-*/
-1
-//db.list('clients', 1);
+    // Atualizando um cliente
+    await db.update('clients', newClient.id, { email: 'novoemail@example.com' });
+    const updatedClients = await db.list('clients');
+    console.log('Clientes atualizados:', updatedClients);
 
-//db.remove('clients', 1);
+    // Removendo um cliente
+    await db.remove('clients', newClient.id);
+    const clientsAfterDeletion = await db.list('clients');
+    console.log('Clientes após remoção:', clientsAfterDeletion);
+}
+
+main().catch(console.error);
